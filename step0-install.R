@@ -1,17 +1,3 @@
-## 
-### ---------------
-###
-### Create: Jianming Zeng
-### Date: 2020-02-09 16:46:35
-### Email: jmzeng1314@163.com
-### Blog: http://www.bio-info-trainee.com/
-### Forum:  http://www.biotrainee.com/thread-1376-1-1.html
-### CAFS/SUSTC/Eli Lilly/University of Macau
-### Update Log: 2020-02-09   First version
-###
-### ---------------
-
-
 
 rm(list = ls())   
 #options()$repos 
@@ -26,8 +12,7 @@ rm(list = ls())
 if (!requireNamespace("BiocManager", quietly = TRUE))
   install.packages("BiocManager")
 BiocManager::install("KEGG.db",ask = F,update = F)
-# 下面几个R包，安装起来，至少四五个小时哈
-# 中间肯定会报错，自己机智一点哦
+
 BiocManager::install("minfi",ask = F,update = F)
 BiocManager::install("ChAMP",ask = F,update = F)
 BiocManager::install("methylationArrayAnalysis",ask = F,update = F) 

@@ -1,12 +1,11 @@
 ## KEGG pathway analysis
-### 做KEGG数据集超几何分布检验分析，重点在结果的可视化及生物学意义的理解。
+### 
 run_kegg <- function(gene_up,gene_down,geneList=F,pro='test'){
   gene_up=unique(gene_up)
   gene_down=unique(gene_down)
   gene_diff=unique(c(gene_up,gene_down))
   ###   over-representation test
-  # 下面把3个基因集分开做超几何分布检验
-  # 首先是上调基因集。
+
   kk.up <- enrichKEGG(gene         = gene_up,
                       organism     = 'hsa',
                       #universe     = gene_all,
@@ -18,7 +17,7 @@ run_kegg <- function(gene_up,gene_down,geneList=F,pro='test'){
   kk=DOSE::setReadable(kk, OrgDb='org.Hs.eg.db',keyType='ENTREZID')
   write.csv(kk@result,paste0(pro,'_kk.up.csv'))
   
-  # 首先是下调基因集。
+
   kk.down <- enrichKEGG(gene         =  gene_down,
                         organism     = 'hsa',
                         #universe     = gene_all,
@@ -30,7 +29,7 @@ run_kegg <- function(gene_up,gene_down,geneList=F,pro='test'){
   kk=DOSE::setReadable(kk, OrgDb='org.Hs.eg.db',keyType='ENTREZID')
   write.csv(kk@result,paste0(pro,'_kk.down.csv'))
   
-  # 最后是上下调合并后的基因集。
+
   kk.diff <- enrichKEGG(gene         = gene_diff,
                         organism     = 'hsa',
                         pvalueCutoff = 0.05)
@@ -46,15 +45,14 @@ run_kegg <- function(gene_up,gene_down,geneList=F,pro='test'){
   kegg_up_dt <- as.data.frame(kk.up)
   down_kegg<-kegg_down_dt[kegg_down_dt$pvalue<0.01,];down_kegg$group=-1
   up_kegg<-kegg_up_dt[kegg_up_dt$pvalue<0.01,];up_kegg$group=1
-  #画图设置, 这个图很丑，大家可以自行修改。
+
   g_kegg=kegg_plot(up_kegg,down_kegg)
   print(g_kegg)
   
   ggsave(g_kegg,filename = paste0(pro,'_kegg_up_down.png') )
   
 if(geneList){
-  ###  GSEA 
-  ## GSEA算法跟上面的使用差异基因集做超几何分布检验不一样。
+
   kk_gse <- gseKEGG(geneList     = geneList,
                     organism     = 'hsa',
                     nPerm        = 1000,
@@ -69,7 +67,6 @@ if(geneList){
   write.csv(kk@result,paste0(pro,'_kegg.gsea.csv'))
   
   
-  # 这里找不到显著下调的通路，可以选择调整阈值，或者其它。
   down_kegg<-kk_gse[kk_gse$pvalue<0.05 & kk_gse$enrichmentScore < 0,];down_kegg$group=-1
   up_kegg<-kk_gse[kk_gse$pvalue<0.05 & kk_gse$enrichmentScore > 0,];up_kegg$group=1
   
@@ -82,7 +79,7 @@ if(geneList){
 }
 
 ### GO database analysis 
-### 做GO数据集超几何分布检验分析，重点在结果的可视化及生物学意义的理解。
+
 run_go <- function(gene_up,gene_down,pro='test'){
   gene_up=unique(gene_up)
   gene_down=unique(gene_down)
@@ -90,7 +87,7 @@ run_go <- function(gene_up,gene_down,pro='test'){
   g_list=list(gene_up=gene_up,
               gene_down=gene_down,
               gene_diff=gene_diff)
-  # 因为go数据库非常多基因集，所以运行速度会很慢。
+
   if(T){
     go_enrich_results <- lapply( g_list , function(gene) {
       lapply( c('BP','MF','CC') , function(ont) {
@@ -111,7 +108,7 @@ run_go <- function(gene_up,gene_down,pro='test'){
     save(go_enrich_results,file =paste0(pro, '_go_enrich_results.Rdata'))
     
   }
-  # 只有第一次需要运行，就保存结果哈，下次需要探索结果，就载入即可。
+
   load(file=paste0(pro, '_go_enrich_results.Rdata'))
   
   n1= c('gene_up','gene_down','gene_diff')

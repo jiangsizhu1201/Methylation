@@ -1,18 +1,4 @@
 
-## 
-### ---------------
-###
-### Create: Jianming Zeng
-### Date: 2020-02-09 16:46:35
-### Email: jmzeng1314@163.com
-### Blog: http://www.bio-info-trainee.com/
-### Forum:  http://www.biotrainee.com/thread-1376-1-1.html
-### CAFS/SUSTC/Eli Lilly/University of Macau
-### Update Log: 2020-02-09   First version
-###
-### ---------------
-
-
 
 rm(list = ls())   
 options(stringsAsFactors = F)
@@ -50,13 +36,12 @@ gene_down=DEG[DEG$g == 'DOWN','ENTREZID']
 gene_diff=c(gene_up,gene_down)
 gene_all=as.character(DEG[ ,'ENTREZID'] ) 
 source('kegg_and_go_up_and_down.R')
-# 有时候kegg数据库抽风，这个函数会失败，这个锅，Y叔背
+
 run_kegg(gene_up,gene_down,pro='test_methy')
-# 需要多go数据库的3个条目进行3次富集分析，非常耗时。
-# 所以我注释掉了下面的代码
+
 # run_go(gene_up,gene_down,pro='npc_VS_normal')
 
-# 下面的GO肯定会慢，但是会成功运行
+
 go <- enrichGO(gene_up, OrgDb = "org.Hs.eg.db", ont="all") 
 library(ggplot2)
 library(stringr)
